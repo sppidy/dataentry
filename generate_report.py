@@ -198,8 +198,133 @@ def generate_report_used():
     except mysql.connector.Error as e:
         messagebox.showerror("Error", "Error reading data from MySQL table: {}".format(e))
         window.destroy()
-generate_button_used = ttk.Button(frame, text="Generate Report Used", command=generate_report_used)
+generate_button_used = ttk.Button(frame, text="Generate Report Monthly Used", command=generate_report_used)
 generate_button_used.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+
+
+def generate_daily_report():
+    date = date_entry.get()
+    class PDF(FPDF):
+        def header(self):
+            self.set_font('Arial', 'BIU', 18)
+            title_w = self.get_string_width(title) + 6
+            doc_w = self.w
+            self.set_x((doc_w - title_w) / 2)
+            self.set_draw_color(0, 80, 180)
+            self.set_fill_color(230, 230, 0)
+            self.set_text_color(220, 50, 50)
+            self.set_line_width(1)
+            self.cell(title_w, 10, title, border=1, ln=1, align='C', fill=1)
+            self.set_font('Arial', 'BI', 14)
+            self.cell(0, 10, txt="Mines Daily Report", ln=1, align='C')
+            self.ln(15)
+
+        def footer(self):
+            self.set_y(-15)
+            self.set_font('Arial', 'I', 8)
+            self.set_text_color(169, 169, 169)
+            self.cell(0, 10, txt="Page " + str(self.page_no()) + "/{nb}", ln=1, align='C')
+    try:
+        connection = mysql.connector.connect(
+            host='localhost',
+            database='mpdre',
+            user='root',
+            password='spidy'
+        )
+        cursor = connection.cursor()
+
+        items = ["_3m", "_4m", "_5m", "_6m", "_7m", "_8m", "_9m", "_10m", "_12m", "_15m", "_slurry", "_slurry_big", "_ed", "_ddet", "_df_5_gms", "_df_10_gms"]
+
+        # Calculate and store opening and closing balances for each item
+        for item in items:
+            # Calculate the opening balance for the item
+            previous_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.timedelta(days=1)
+            previous_day_str = previous_day.strftime("%Y-%m-%d")
+            sql_previous_closing_balance = "SELECT closing_balance FROM balances WHERE date = %s AND item = %s ORDER BY id DESC LIMIT 1"
+            cursor.execute(sql_previous_closing_balance, (previous_day_str, item))
+            previous_closing_balance = cursor.fetchone()
+
+            if previous_closing_balance is None:
+                opening_balance = 0  # Default opening balance for the first day
+            else:
+                opening_balance = previous_closing_balance[0]
+
+            # Calculate the materials purchased for the item on the given date
+            sql_purchased = f"SELECT {item}_total FROM explosives WHERE date = %s"
+            cursor.execute(sql_purchased, (date,))
+            purchased_records = cursor.fetchone()
+            purchased = purchased_records[0] if purchased_records else 0
+
+            # Calculate the materials used for the item on the given date
+            sql_used = f"SELECT {item}_used FROM explosives WHERE date = %s"
+            cursor.execute(sql_used, (date,))
+            used_records = cursor.fetchone()
+            used = used_records[0] if used_records else 0
+
+            # Calculate the closing balance for the item
+            closing_balance = opening_balance + purchased - used
+
+            # Update the balances table with the opening and closing balances for the specific date and item combination
+            sql_update_balances = "INSERT INTO balances (date, item, opening_balance, closing_balance) VALUES (%s, %s, %s, %s)"
+            cursor.execute(sql_update_balances, (date, item, opening_balance, closing_balance))
+            connection.commit()
+
+        # Generate PDF report
+        pdf = PDF()
+        pdf.alias_nb_pages()
+        pdf.add_page()
+
+        # Report content
+        pdf.set_font('Arial', '', 12)
+
+        pdf.cell(0, 10, txt="Date: " + date, ln=1)
+        pdf.ln(5)
+
+        pdf.cell(40, 10, "Item", 1, 0, 'C')
+        pdf.cell(40, 10, "Opening Balance", 1, 0, 'C')
+        pdf.cell(30, 10, "Purchased", 1, 0, 'C')
+        pdf.cell(30, 10, "Used", 1, 0, 'C')
+        pdf.cell(40, 10, "Closing Balance", 1, 1, 'C')
+        
+        item_names = ["3m Excel", "4m Excel", "5m Excel", "6m Excel", "7m Excel", "8m Excel", "9m Excel", "10m Excel", "12m Excel", "15m Excel", "Slurry", "Slurry Big", "ED", "DDet", "DF 5gms", "DF 10gms"]
+
+        for item in items:
+            sql_get_balances = "SELECT opening_balance, closing_balance FROM balances WHERE date = %s AND item = %s"
+            sql_get_purchased = f"SELECT {item}_total FROM explosives WHERE date = %s"
+            sql_get_used = f"SELECT {item}_used FROM explosives WHERE date = %s"
+            cursor.execute(sql_get_balances, (date, item))
+            balances = cursor.fetchall()
+            opening_balance = balances[0][0]
+            closing_balance = balances[0][1]
+            cursor.reset()
+            cursor.execute(sql_get_purchased, (date,))
+            purchased_records = cursor.fetchone()
+            purchased = purchased_records[0] if purchased_records else 0
+            cursor.reset()
+            cursor.execute(sql_get_used, (date,))
+            used_records = cursor.fetchone()
+            used = used_records[0] if used_records else 0
+            cursor.reset()
+            name=item_names[items.index(item)]
+            pdf.cell(40, 10, name, 1, 0, 'C')
+            pdf.cell(40, 10, str(opening_balance), 1, 0, 'C')
+            pdf.cell(30, 10, str(purchased), 1, 0, 'C')
+            pdf.cell(30, 10, str(used), 1, 0, 'C')
+            pdf.cell(40, 10, str(closing_balance), 1, 1, 'C')
+
+        # Save the PDF report
+        pdf.output(f"C://Reports//daily_report_{date}.pdf")
+        messagebox.showinfo("Report", "Report generated successfully.")
+        cursor.close()
+        connection.close()
+
+    except (mysql.connector.Error,PermissionError) as e:
+        if e==PermissionError:
+            messagebox.showerror("Error", "Please close the existing report.")
+        else:
+            print("Error reading data from MySQL table:", e)
+
+generate_button_daily = ttk.Button(frame, text="Generate Daily Report Used", command=generate_daily_report)
+generate_button_daily.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
+
 window.mainloop()
-
-
