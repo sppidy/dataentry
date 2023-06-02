@@ -289,37 +289,37 @@ def stocks():
     data2_frame=ttk.LabelFrame(frame, text="Stocks")
     data2_frame.grid(row=4, column=0, padx=40, pady=10)
     # --- Stocks Labels ---
-    _3m_excel_label_ = ttk.Label(data2_frame, text="3m Excel")
+    _3m_excel_label_ = tk.Label(data2_frame, text="3m Excel", font=("Arial", 15))
     _3m_excel_label_.grid(row=0, column=0)
-    _4m_excel_label_ = ttk.Label(data2_frame, text="4m Excel")
+    _4m_excel_label_ = tk.Label(data2_frame, text="4m Excel", font=("Arial", 15))
     _4m_excel_label_.grid(row=1, column=0)
-    _5m_excel_label_ = ttk.Label(data2_frame, text="5m Excel")
+    _5m_excel_label_ = tk.Label(data2_frame, text="5m Excel", font=("Arial", 15))
     _5m_excel_label_.grid(row=2, column=0)
-    _6m_excel_label_ = ttk.Label(data2_frame, text="6m Excel")
+    _6m_excel_label_ = tk.Label(data2_frame, text="6m Excel", font=("Arial", 15))
     _6m_excel_label_.grid(row=3, column=0)
-    _7m_excel_label_ = ttk.Label(data2_frame, text="7m Excel")
+    _7m_excel_label_ = tk.Label(data2_frame, text="7m Excel", font=("Arial", 15))
     _7m_excel_label_.grid(row=4, column=0)
-    _8m_excel_label_ = ttk.Label(data2_frame, text="8m Excel")
+    _8m_excel_label_ = tk.Label(data2_frame, text="8m Excel", font=("Arial", 15))
     _8m_excel_label_.grid(row=5, column=0)
-    _9m_excel_label_ = ttk.Label(data2_frame, text="9m Excel")
+    _9m_excel_label_ = tk.Label(data2_frame, text="9m Excel", font=("Arial", 15))
     _9m_excel_label_.grid(row=6, column=0)
-    _10m_excel_label_ = ttk.Label(data2_frame, text="10m Excel")
+    _10m_excel_label_ = tk.Label(data2_frame, text="10m Excel", font=("Arial", 15))
     _10m_excel_label_.grid(row=7, column=0)
-    _12m_excel_label_ = ttk.Label(data2_frame, text="12m Excel")
+    _12m_excel_label_ = tk.Label(data2_frame, text="12m Excel", font=("Arial", 15))
     _12m_excel_label_.grid(row=8, column=0)
-    _15m_excel_label_ = ttk.Label(data2_frame, text="15m Excel")
+    _15m_excel_label_ = tk.Label(data2_frame, text="15m Excel", font=("Arial", 15))
     _15m_excel_label_.grid(row=9, column=0)
-    _slurry_label_ = ttk.Label(data2_frame, text="Slurry")
+    _slurry_label_ = tk.Label(data2_frame, text="Slurry", font=("Arial", 15))
     _slurry_label_.grid(row=10, column=0)
-    _slurry_big_label_ = ttk.Label(data2_frame, text="Slurry Big")
+    _slurry_big_label_ = tk.Label(data2_frame, text="Slurry Big", font=("Arial", 15))
     _slurry_big_label_.grid(row=11, column=0)
-    _ed_label_ = ttk.Label(data2_frame, text="E.D")
+    _ed_label_ = tk.Label(data2_frame, text="E.D", font=("Arial", 15))
     _ed_label_.grid(row=12, column=0)
-    _d_det_label_ = ttk.Label(data2_frame, text="D.Det")
+    _d_det_label_ = tk.Label(data2_frame, text="D.Det", font=("Arial", 15))
     _d_det_label_.grid(row=13, column=0)
-    _df_5gms_label_ = ttk.Label(data2_frame, text="DF 5gms")
+    _df_5gms_label_ = tk.Label(data2_frame, text="DF 5gms", font=("Arial", 15))
     _df_5gms_label_.grid(row=14, column=0)
-    _df_10gms_label_ = ttk.Label(data2_frame, text="DF 10gms")
+    _df_10gms_label_ = tk.Label(data2_frame, text="DF 10gms", font=("Arial", 15))
     _df_10gms_label_.grid(row=15, column=0)
     # --- Stocks Labels Completed ---
     # --- Stocks Queries ---
@@ -377,37 +377,37 @@ def stocks():
     _df_10gms_query_data = cursor.fetchone()
     # --- Stocks Data Completed ---
     # --- Stocks Data Entry ---
-    _3m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _3m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _3m_excel_entry1_.grid(row=0, column=1)
-    _4m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _4m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _4m_excel_entry1_.grid(row=1, column=1)
-    _5m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _5m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _5m_excel_entry1_.grid(row=2, column=1)
-    _6m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _6m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _6m_excel_entry1_.grid(row=3, column=1)
-    _7m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _7m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _7m_excel_entry1_.grid(row=4, column=1)
-    _8m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _8m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _8m_excel_entry1_.grid(row=5, column=1)
-    _9m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _9m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _9m_excel_entry1_.grid(row=6, column=1)
-    _10m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _10m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _10m_excel_entry1_.grid(row=7, column=1)
-    _12m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _12m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _12m_excel_entry1_.grid(row=8, column=1)
-    _15m_excel_entry1_ = ttk.Label(data2_frame, text="None")
+    _15m_excel_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _15m_excel_entry1_.grid(row=9, column=1)
-    _slurry_entry1_ = ttk.Label(data2_frame, text="None")
+    _slurry_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _slurry_entry1_.grid(row=10, column=1)
-    _slurry_big_entry1_ = ttk.Label(data2_frame, text="None")
+    _slurry_big_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _slurry_big_entry1_.grid(row=11, column=1)
-    _ed_entry1_ = ttk.Label(data2_frame, text="None")
+    _ed_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _ed_entry1_.grid(row=12, column=1)
-    _d_det_entry1_ = ttk.Label(data2_frame, text="None")
+    _d_det_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _d_det_entry1_.grid(row=13, column=1)
-    _df_5gms_entry1_ = ttk.Label(data2_frame, text="None")
+    _df_5gms_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _df_5gms_entry1_.grid(row=14, column=1)
-    _df_10gms_entry1_ = ttk.Label(data2_frame, text="None")
+    _df_10gms_entry1_ = ttk.Label(data2_frame, text="None", font=("Arial", 15))
     _df_10gms_entry1_.grid(row=15, column=1)
     # --- Stocks Data Entry Completed ---
     # --- Refresh Button ---
@@ -518,15 +518,17 @@ def stocks():
 # This program is the sql version of the ./program.py file
 # Path: program_sql.py
 # This is the main program which uses sql database to store the data.
+
+db=mysql.connect(host="localhost", user="root", password=passwd)
+cursor=db.cursor()
+
 def main(usertype):
     if usertype=="admin":
+        messagebox.showinfo("Admin","Welcome Admin")
         basepath=os.path.dirname(__file__)
         mine=basepath+"\\mines.ico"
-
         global db
         global cursor
-        db=mysql.connect(host="localhost", user="root", password=passwd)
-        cursor=db.cursor()
         window=tk.Tk()
         window.title("Mines Management System")
         window.iconbitmap(mine)
@@ -1324,15 +1326,12 @@ def main(usertype):
         # --- Data Entry 3 ---
         data2_info=ttk.LabelFrame(second_frame,text="Rates")
         data2_info.grid(row=4,column=0,padx=40,pady=10)
-        
-        #display_buttons()
         window.mainloop()
     elif usertype != 'admin':
-        
         global db
         global cursor
-        db=mysql.connect(host="localhost", user="root", password=passwd)
-        cursor=db.cursor()
+        basepath=os.path.dirname(__file__)
+        mine=basepath+'\\mines.ico'
         window=tk.Tk()
         window.title("Mines Management System")
         window.iconbitmap(mine)
@@ -2203,7 +2202,6 @@ class LoginWindow(tk.Tk):
                 # Successful login
                 self.destroy()
                 main(username)
-                messagebox.showinfo("Login", "Login Successful!")
                 # Add your code to open the main application window or perform further actions
             else:
                 # Invalid login credentials
