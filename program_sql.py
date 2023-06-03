@@ -1,17 +1,17 @@
-
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector as mysql
 import datetime
 import decimal 
-import os 
+import os
+from mysql.connector.locales.eng import client_error
+from fpdf import FPDF
+
 basepath=os.path.dirname(__file__)
 
 passwd=passd="sql@123"
 mine=basepath+"\\mines.ico"
-
-from fpdf import FPDF
 
 title = "Lakshmi Blue Metals"
     
@@ -519,7 +519,7 @@ def stocks():
 # Path: program_sql.py
 # This is the main program which uses sql database to store the data.
 
-db=mysql.connect(host="localhost", user="root", password=passwd)
+db=mysql.connect(host="localhost", user="root", password=passwd, auth_plugin='mysql_native_password')
 cursor=db.cursor()
 
 def main(usertype):
@@ -785,7 +785,8 @@ def main(usertype):
                 cursor.execute(f"SELECT * FROM dr WHERE date = '{date_entry_s}'")
                 data = cursor.fetchone()
                 if data is not None:
-                    date_entry.insert(0, data[0].strftime("%d/%m/%Y"))
+                    date_entry.insert(0, data[0].strftime("%Y/%m/%d"))
+                    date_entry.config(state="disabled")
                     bunk_name.insert(0, data[1])
                     diesel_purchased.insert(0, data[2])
                     sanybreakerhours_entry.insert(0, data[3])
@@ -821,6 +822,7 @@ def main(usertype):
             global db
             global cursor
             global date_entry1
+            
             date=date_entry.get()
             bunkname=bunk_name.get()
             dieselpurchased=int(diesel_purchased.get())
@@ -846,8 +848,9 @@ def main(usertype):
             _950_loads_ = int(_950_loads_entry.get())
             _loading_done_on_ = _loading_done_on_entry.get()
             cursor.execute("USE mpdre")
-            cursor.execute(f"update dr set bunk_name='{bunkname}',diesel_purchased={dieselpurchased},sanybreakerhrs={sanybreakerhours},sanybuckethrs={sanybuckerhours},volvo240buckethrs={volvo240breakerhours},volvo210buckethrs={volvo210breakerhours},cardieselltrs={car_diesel_ltrs},_3359_diesel_ltrs={_3359_diesel_ltrs},_770_diesel_ltrs={_770_diesel_ltrs},_compressor1dieselltrs={_compressor1diesel_},_compressor2dieselltrs={_compressor2diesel_},_volvo_240_diesel_ltrs={_volvo_240_diesel_},_volvo_210_diesel_ltrs={_volvo_210_diesel_},_sany_140_diesel_ltrs={_sany_140_diesel_},dieselpriceonday={_diesel_price_on_day_},_5569_loads={_5569_loads_},_9970_loads={_9970_loads_},_222_loads={_222_loads_},_3359_loads={_3359_loads_},_5506_loads={_5506_loads_},_5508_loads={_5508_loads_},_950_loads={_950_loads_},loading_done='{_loading_done_on_}' where date={date_entry1.get()}")
+            cursor.execute(f"update dr set bunk_name='{bunkname}',diesel_purchased={dieselpurchased},sanybreakerhrs={sanybreakerhours},sanybuckethrs={sanybuckerhours},volvo240buckethrs={volvo240breakerhours},volvo210buckethrs={volvo210breakerhours},cardieselltrs={car_diesel_ltrs},_3359_diesel_ltrs={_3359_diesel_ltrs},_770_diesel_ltrs={_770_diesel_ltrs},_compressor1dieselltrs={_compressor1diesel_},_compressor2dieselltrs={_compressor2diesel_},_volvo_240_diesel_ltrs={_volvo_240_diesel_},_volvo_210_diesel_ltrs={_volvo_210_diesel_},_sany_140_diesel_ltrs={_sany_140_diesel_},dieselpriceonday={_diesel_price_on_day_},_5569_loads={_5569_loads_},_9970_loads={_9970_loads_},_222_loads={_222_loads_},_3359_loads={_3359_loads_},_5506_loads={_5506_loads_},_5508_loads={_5508_loads_},_950_loads={_950_loads_},loading_done='{_loading_done_on_}' where date='{date}'")
             db.commit()
+            date_entry.config(state="enabled")
             clear_data()
             messagebox.showinfo("Success", "Data updated successfully")
 
@@ -904,7 +907,6 @@ def main(usertype):
         button_delete.configure(background="red")
         button_delete.grid(row=0, column=4, sticky="news")
         # --- Data Entry 1 Buttons Completed ---
-
         #--- Data Entry 1 Completed ---
         # --- Data Entry 2 ---
         data1_info =tk.LabelFrame(second_frame, text="Mines Entry",background="#CCCCFF",font=("Calibiri", 10))
@@ -1186,7 +1188,8 @@ def main(usertype):
                 cursor.execute(f"select * from explosives where date={date1_entry_s}")
                 data=cursor.fetchall()
                 if data is not None:
-                    date1_entry.insert(0, data[0][0].strftime("%d/%m/%Y"))
+                    date1_entry.insert(0, data[0][0].strftime("%Y/%m/%d"))
+                    date1_entry.config(state="disabled")
                     blasting_done_on_entry_.insert(0, data[0][1])
                     _3m_excel_entry_.insert(0, data[0][2])
                     _3m_excel_used_entry_.insert(0, data[0][3])
@@ -1267,8 +1270,10 @@ def main(usertype):
             _wagon_drill_4_5=int(_wagon_drill_4_5_entry_.get())
             amount_paid=int(amount_paid_entry_.get())
             cursor.execute("USE mpdre")
-            cursor.execute(f"update explosives set blasting_done_on={_blasting_done_on_}_3m_total={_3m_excel_reciept},_3m_used={_3m_excel_used},_4m_total={_4m_reciepts},_4m_used={_4m_excel_used},_5m_total={_5m_excel_reciepts},_5m_used={_5m_excel_used},_6m_total={_6m_excel_reciepts},_6m_used={_6m_excel_used},_7m_total={_7m_excel_reciepts},_7m_used={_7m_excel_used},_slurry_total={_slurry_reciept},_slurry_used={_slurry_used},_slurry_big_total={_slurry_big_reciept},_slurry_big_used={_slurry_big_used},_ed_total={_ed_reciept},_ed_used={_ed_used},_d_det_total={_d_det_reciepts},_d_det_used={_d_det_used},_df_5gms_total={_df_5gms_reciepts},_df_5gms_used={_df_5gms_used},_df_10gms_total={_df_10gms_reciepts},_df_10gms_used={_df_10gms_used},_no_of_holes_2_5={_no_of_holes_2_5},_no_of_holes_5={_no_of_holes_5},_no_of_holes_6={_no_of_holes_6},_no_of_holes_8={_no_of_holes_8},_wagon_drill_4_5={_wagon_drill_4_5},amount_paid={amount_paid} where date={date_entry3.get()}")
+            cursor.execute(f"update explosives set blasting_done_on={_blasting_done_on_}_3m_total={_3m_excel_reciept},_3m_used={_3m_excel_used},_4m_total={_4m_reciepts},_4m_used={_4m_excel_used},_5m_total={_5m_excel_reciepts},_5m_used={_5m_excel_used},_6m_total={_6m_excel_reciepts},_6m_used={_6m_excel_used},_7m_total={_7m_excel_reciepts},_7m_used={_7m_excel_used},_slurry_total={_slurry_reciept},_slurry_used={_slurry_used},_slurry_big_total={_slurry_big_reciept},_slurry_big_used={_slurry_big_used},_ed_total={_ed_reciept},_ed_used={_ed_used},_d_det_total={_d_det_reciepts},_d_det_used={_d_det_used},_df_5gms_total={_df_5gms_reciepts},_df_5gms_used={_df_5gms_used},_df_10gms_total={_df_10gms_reciepts},_df_10gms_used={_df_10gms_used},_no_of_holes_2_5={_no_of_holes_2_5},_no_of_holes_5={_no_of_holes_5},_no_of_holes_6={_no_of_holes_6},_no_of_holes_8={_no_of_holes_8},_wagon_drill_4_5={_wagon_drill_4_5},amount_paid={amount_paid} where date={date}")
             db.commit()
+            date1_entry.config(state="enabled")
+            clear_data1()
             messagebox.showinfo("Success", "Data updated successfully")
             
         def delete_data1():
