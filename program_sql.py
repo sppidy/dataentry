@@ -59,8 +59,8 @@ def generate_monthly_report():
                                                 database='mpdre',
                                                 user='root',
                                                 password=passd)
-            sql_select_Query1 = "SELECT sum(_3m_used),sum(_4m_used),sum(_5m_used),sum(_6m_used),sum(_7m_used),sum(_8m_used),sum(_9m_used),sum(_10m_used),sum(_12m_used),sum(_15m_used),sum(_slurry_used),sum(_slurry_big_used),sum(_ed_used),sum(_ddet_used),sum(_df_5_gms_used),sum(_df_10_gms_used) FROM explosives WHERE month(month)=%s"
-            sql_select_Query2 = "SELECT sum(_3m_total),sum(_4m_total),sum(_5m_total),sum(_6m_total),sum(_7m_total),sum(_8m_total),sum(_9m_total),sum(_10m_total),sum(_12m_total),sum(_15m_total),sum(_slurry_total),sum(_slurry_big_total),sum(_ed_total),sum(_ddet_total),sum(_df_5_gms_total),sum(_df_10_gms_total) FROM explosives WHERE month(month)=%s"
+            sql_select_Query1 = "SELECT sum(_3m_used),sum(_4m_used),sum(_5m_used),sum(_6m_used),sum(_7m_used),sum(_8m_used),sum(_9m_used),sum(_10m_used),sum(_12m_used),sum(_15m_used),sum(_slurry_used),sum(_slurry_big_used),sum(_ed_used),sum(_ddet_used),sum(_df_5_gms_used),sum(_df_10_gms_used) FROM explosives WHERE month(date)=%s"
+            sql_select_Query2 = "SELECT sum(_3m_total),sum(_4m_total),sum(_5m_total),sum(_6m_total),sum(_7m_total),sum(_8m_total),sum(_9m_total),sum(_10m_total),sum(_12m_total),sum(_15m_total),sum(_slurry_total),sum(_slurry_big_total),sum(_ed_total),sum(_ddet_total),sum(_df_5_gms_total),sum(_df_10_gms_total) FROM explosives WHERE month(date)=%s"
             cursor = connection.cursor()
             cursor.execute(sql_select_Query1, (month,))
             records1 = cursor.fetchall()
@@ -111,6 +111,7 @@ def generate_monthly_report():
                 pdf.ln(row_height)
 
             pdf.output(f"C://Reports//monthly_report_{month}.pdf")
+            messagebox.showinfo("Report", "Report generated successfully.\n\nReport saved in C://Reports//Monthly//monthly_report_{month}.pdf")
             window.destroy()
 
         except BaseException as e:
@@ -129,13 +130,13 @@ def generate_daily_report():
     frame.pack()
     dataframe = ttk.LabelFrame(frame, text="Report", borderwidth=2, relief="groove")
     dataframe.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-    date_label = ttk.Label(dataframe, text="Enter the date (yyyy/mm/dd):")
+    date_label = ttk.Label(dataframe, text="Enter the date (yyyy-mm-dd):")
     date_label.grid(row=0, column=0, padx=10, pady=10)
     date_entry = ttk.Entry(dataframe, width=20)
     date_entry.grid(row=0, column=1, padx=10, pady=10)
     date_entry.focus()
-    date = date_entry.get()
     def main():
+        date = date_entry.get()
         class PDF(FPDF):
             def header(self):
                 self.set_font('Arial', 'BIU', 18)
@@ -157,7 +158,7 @@ def generate_daily_report():
                 self.set_text_color(169, 169, 169)
                 self.cell(0, 10, txt="Page " + str(self.page_no()) + "/{nb}", ln=1, align='C')
         try:
-            connection = mysql.connector.connect(
+            connection = mysql.connect(
                 host='localhost',
                 database='mpdre',
                 user='root',
@@ -170,8 +171,8 @@ def generate_daily_report():
             # Calculate and store opening and closing balances for each item
             for item in items:
                 # Calculate the opening balance for the item
-                previous_day = datetime.datetime.strptime(date, "%Y/%/%d") - datetime.timedelta(days=1)
-                previous_day_str = previous_day.strftime("%Y/%m/%d")
+                previous_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.timedelta(days=1)
+                previous_day_str = previous_day.strftime("%Y-%m-%d")
                 sql_previous_closing_balance = "SELECT closing_balance FROM balances WHERE date = %s AND item = %s ORDER BY id DESC LIMIT 1"
                 cursor.execute(sql_previous_closing_balance, (previous_day_str, item))
                 previous_closing_balance = cursor.fetchone()
@@ -253,11 +254,12 @@ def generate_daily_report():
 
             # Save the PDF report
             pdf.output(f"C://Reports//daily_report_{date}.pdf")
-            messagebox.showinfo("Report", "Report generated successfully.")
+            messagebox.showinfo("Report", "Report generated successfully.\n\nReport saved in C://Reports//Daily//daily_report_{date}.pdf")
+            window.destroy()
             cursor.close()
             connection.close()
 
-        except (mysql.connector.Error,PermissionError) as e:
+        except (mysql.Error,PermissionError) as e:
             if e==PermissionError:
                 messagebox.showerror("Error", "Please close the existing report.")
             else:
