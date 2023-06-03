@@ -81,14 +81,14 @@ def generate_monthly_report():
                 messagebox.showerror("Report", "No data found for the given month.")
                 return
             curre = int(month) - 1
-            month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
             items=["3m Excel", "4m Excel", "5m Excel", "6m Excel", "7m Excel", "8m Excel", "9m Excel", "10m Excel", "12m Excel", "15m Excel", "Slurry", "Slurry Big", "ED", "DDet", "DF 5gms", "DF 10gms", "Total Compressor Ft", "Wagon Drill 4.5"]
             pdf = PDF('P', 'mm', 'A4')
             pdf.set_auto_page_break(auto=True, margin=10)
             pdf.alias_nb_pages()
             pdf.add_page()
             pdf.set_font("times", 'BU', 16)
-            pdf.cell(0, 10, txt=f"Monthly Report of {month[curre]}", ln=1, align="L")
+            pdf.cell(0, 10, txt=f"Monthly Report of {months[curre]}", ln=1, align="L")
             
             # Generate table headers
             pdf.set_fill_color(230, 230, 230)
@@ -109,9 +109,11 @@ def generate_monthly_report():
                 pdf.cell(col_widths[2], row_height, txt=str(rec1[i]), border=1, align="C")
                 pdf.cell(col_widths[3], row_height, txt=str(rec2[i]), border=1, align="C")
                 pdf.ln(row_height)
-
-            pdf.output(f"C://Reports//monthly_report_{month}.pdf")
-            messagebox.showinfo("Report", "Report generated successfully.\n\nReport saved in C://Reports//Monthly//monthly_report_{month}.pdf")
+            # Save the PDF report
+            if not os.path.exists("C://Reports//Monthly"):
+                os.makedirs("C://Reports//Monthly")
+            pdf.output(f"C://Reports//Monthly//monthly_report_{month}.pdf")
+            messagebox.showinfo("Report", f"Report generated successfully.\n\nReport saved in C://Reports//Monthly//monthly_report_{month}.pdf")
             window.destroy()
 
         except BaseException as e:
@@ -253,15 +255,19 @@ def generate_daily_report():
                 pdf.cell(35, 10, str(closing_balance), 1, 1, 'C')
 
             # Save the PDF report
-            pdf.output(f"C://Reports//daily_report_{date}.pdf")
-            messagebox.showinfo("Report", "Report generated successfully.\n\nReport saved in C://Reports//Daily//daily_report_{date}.pdf")
+            if not os.path.exists("C://Reports//Daily"):
+                os.makedirs("C://Reports//Daily")
+            pdf.output(f"C://Reports//Daily//daily_report_{date}.pdf")
+            messagebox.showinfo("Report", f"Report generated successfully.\n\nReport saved in C://Reports//Daily//daily_report_{date}.pdf")
             window.destroy()
             cursor.close()
             connection.close()
 
-        except (mysql.Error,PermissionError) as e:
+        except (mysql.Error,PermissionError,ValueError) as e:
             if e==PermissionError:
                 messagebox.showerror("Error", "Please close the existing report.")
+            elif e==ValueError:
+                messagebox.showerror("Error", "Please enter a valid in yyyy-mm-dd format.")
             else:
                 print("Error reading data from MySQL table:", e)
 
